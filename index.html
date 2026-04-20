@@ -159,7 +159,7 @@ form.addEventListener("submit", async (e) => {
     uploadBtn.textContent = "Uploading...";
 
     try {
-        const response = await fetch(`http://localhost:${process.env.PORT}/upload`, {
+        const response = await fetch("/upload", {
             method: "POST",
             body: formData
         });
