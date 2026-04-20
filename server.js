@@ -7,7 +7,7 @@ const path = require("path");
 
 const app = express();
 app.use(cors());
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, "public")));
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -16,9 +16,11 @@ const containerName = process.env.CONTAINER_NAME;
 
 const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
 const containerClient = blobServiceClient.getContainerClient(containerName);
+
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
+    res.sendFile(path.join(__dirname, "public", "index.html"));
 });
+
 app.post("/upload", upload.single("file"), async (req, res) => {
     try {
         if (!req.file) {
@@ -47,7 +49,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
             fileUrl: url
         });
     } catch (err) {
-        res.status(500).send(err.message);
+        res.status(500).json({ error: "Internal server error" });
     }
 });
 
